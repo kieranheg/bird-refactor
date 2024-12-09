@@ -8,11 +8,8 @@ jobs:
       - name: determine associated issue id
         id: get-jira
         run: |
-          repo="${{github.event.pull_request.head.repo.full_name}}"
-          echo "Repo name: $repo" >> $GITHUB_OUTPUT
-               
           title="${{github.event.pull_request.title}}"
-          ticket_id=SCRUM-1
+          ticket_id="SCRUM-1"
 #          ticket_id=${title%%:*}
           if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
             echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
