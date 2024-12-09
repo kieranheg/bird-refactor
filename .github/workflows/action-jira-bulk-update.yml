@@ -10,3 +10,4 @@ jobs:
           github-token: ${{ secrets.GITHUB_TOKEN }}
           jira-token: ${{ secrets.JIRA_TOKEN }}
           jira-base-url: https://https://dummy.atlassian.net/
+          jira-user: ''
