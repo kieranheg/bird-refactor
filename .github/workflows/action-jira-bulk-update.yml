@@ -9,7 +9,7 @@ jobs:
         id: get-jira
         run: |
           title="${{github.event.pull_request.title}}"
-          ticket_id="SCRUM-123"
+          ticket_id="SCRUM-1"
           if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
             echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
           fi
