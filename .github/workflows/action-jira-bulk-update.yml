@@ -13,6 +13,7 @@ jobs:
           if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
             echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
           fi
+          echo "not in if >> ticket-id=$ticket_id" >> $GITHUB_OUTPUT
 
       - uses: insidewhy/action-get-jira-issue@v1
         id: jira
