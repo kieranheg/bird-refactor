@@ -8,6 +8,9 @@ jobs:
       - name: determine associated issue id
         id: get-jira
         run: |
+          repo="${{github.event.pull_request.head.repo.full_name}}"
+          echo "Repo name: $repo" >> $GITHUB_OUTPUT
+               
           title="${{github.event.pull_request.title}}"
           ticket_id=SCRUM-1
 #          ticket_id=${title%%:*}
