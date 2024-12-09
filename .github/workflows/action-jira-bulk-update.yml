@@ -1,8 +1,6 @@
 name: action-jira-linter
-on:
-  pull_request_review:
-    branches:
-      - hack/SCRUM-1-gha-update-jira-label
+on: [pull_request]
+
 jobs:
   action-jira-linter:
     runs-on: ubuntu-latest
