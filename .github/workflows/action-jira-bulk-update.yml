@@ -1,15 +1,38 @@
 name: action-jira-linter
 on:
-  pull_request:
+  push:
     branches:
       - main
+      - hack/SCRUM-1-gha-update-jira-label
 jobs:
   action-jira-linter:
     runs-on: ubuntu-latest
     steps:
-      - uses: btwrk/action-jira-linter@v1.0.1
+      - name: determine associated issue id
+        id: get-jira
+        run: |
+          title="${{github.event.pull_request.title}}"
+          ticket_id=${title%%:*}
+          if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
+            echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
+          fi
+
+      - uses: insidewhy/action-get-jira-issue@v1
+        id: jira
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          jira-token: ${{ secrets.JIRA_TOKEN }}
-          jira-base-url: ${{ secrets.JIRA_DOMAIN }}
-          jira-user: ${{ secrets.JIRA_USER }}
+          user: ${{ secrets.JIRA_USER }}
+          token: ${{ secrets.JIRA_TOKEN }}
+          base-url: ${{ secrets.JIRA_DOMAIN }}
+          ticket-id: ${{ steps.get-jira.outputs.ticket-id }}
+
+      - name: echo jira details
+        run: echo ${{ steps.jira.outputs.link }} - ${{steps.jira.outputs.summary}}
+
+
+#      - uses: btwrk/action-jira-linter@v1.0.1
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          jira-token: ${{ secrets.JIRA_TOKEN }}
+#          jira-base-url: ${{ secrets.JIRA_DOMAIN }}
+#          jira-user: ${{ secrets.JIRA_USER }}
+#
