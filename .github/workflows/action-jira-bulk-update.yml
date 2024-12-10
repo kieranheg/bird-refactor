@@ -20,10 +20,10 @@ jobs:
         run: |
           title="${{github.event.pull_request.title}}"
           
-          # Extract substring inside square brackets
           if [[ $title =~ \[([A-Z]+-[0-9]+)\] ]]; then
             ticket_id="${BASH_REMATCH[1]}"
             echo "ticket-id=$ticket-id" >> $GITHUB_OUTPUT
+          fi
 
       # this action will update the fields of the Jira issue (labels)
       - name: Update Fields
