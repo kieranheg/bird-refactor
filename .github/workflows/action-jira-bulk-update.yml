@@ -1,37 +1,109 @@
-name: action-jira-linter
+name: Jira Issue Updater
+
 on: [pull_request]
 
 jobs:
-  action-jira-linter:
+  update-jira-issue:
+    name: Update Jira issue
     runs-on: ubuntu-latest
     steps:
-      - name: determine associated issue id
-        id: get-jira
-        run: |
-          title="${{github.event.pull_request.title}}"
-          echo "1 title=$title"
-          echo "1 =====================" 
-          ticket_id="SCRUM-1"
-          echo "2 ticket-id=$ticket_id"
-          echo "2 ====================="
-          if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
-            echo "7 ticket-id=$ticket_id"
-            echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
-          fi
-          echo "3 ====================="
+      - name: Jira Login
+        uses: frieder/gha-jira-login@v1
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_DOMAIN }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_TOKEN }}
 
-      - uses: insidewhy/action-get-jira-issue@v1
-        id: jira
+      - name: Update Fields
+        id: updatefields
+        uses: frieder/jira-issue-updater@v1
         with:
-          user: ${{ secrets.JIRA_USER }}
-          token: ${{ secrets.JIRA_TOKEN }}
-          base-url: ${{ secrets.JIRA_DOMAIN }}
-          ticket-id: ${{ steps.get-jira.outputs.ticket-id }}
+          retries: 1
+          retryDelay: 10
+          timeout: 2000
+          failOnError: true
+          # either one of the following three config option formats of 'issue' is valid
+          issue: SCRUM-1
+#          issue: XYZ-1,XYZ-2,XYZ-3
+#          issue: |
+#            XYZ-1
+#            XYZ-2
+#            XYZ-3
+#          summary: Some fancy title
+#          description: Plaintext only
+#          assignee: 123456:12345678-abcd-abcd-abcd-1234567890ab
+#          priority: Lowest
+#          duedate: 2023-02-01
+#          resolution: Won't Do
+#          components: |
+#            = component1
+#            = component2
+#            + component3
+#            - component2
+#          fixversions: |
+#            = 1.0
+#            = 1.1
+#            + 2.0
+#            - 1.1
+          labels: |
+#            = foo
+#            = foo2
+#            = bar2
+            + bar
+#            - foo2
+#            - bar2
+#          customfields: |
+#            10050: some value
+#            10051: 2023-01-01
+#            10052: https://github.com/marketplace?type=action
+#          customfieldsJson: |
+#            10057: {"content":[{"content":[{"type":"text","text":"Content for the TextArea custom field"}],"type":"paragraph"}],"type":"doc","version":1}
+#            10058: ["value1", "value2]
 
-      - name: echo jira details
-        run:
-          echo "4 running jira details"
-          echo ${{ steps.jira.outputs.link }} - ${{ steps.jira.outputs.labels[1] }} - ${{ steps.jira.outputs.summary }} -
+      # this action will only be reached when failOnError was set to false in the previous step
+      - name: Print Outputs
+        run: |
+          echo "HAS ERRORS: ${{ steps.updatefields.outputs.hasErrors }}"
+          echo "IDs SUCCESS: ${{ steps.updatefields.outputs.successful }}"
+          echo "IDs ERROR: ${{ steps.updatefields.outputs.failed }}"
+
+
+
+
+#name: action-jira-linter
+#on: [pull_request]
+#
+#jobs:
+#  action-jira-linter:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: determine associated issue id
+#        id: get-jira
+#        run: |
+#          title="${{github.event.pull_request.title}}"
+#          echo "1 title=$title"
+#          echo "1 ====================="
+#          ticket_id="SCRUM-1"
+#          echo "2 ticket-id=$ticket_id"
+#          echo "2 ====================="
+#          if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
+#            echo "7 ticket-id=$ticket_id"
+#            echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
+#          fi
+#          echo "3 ====================="
+#
+#      - uses: insidewhy/action-get-jira-issue@v1
+#        id: jira
+#        with:
+#          user: ${{ secrets.JIRA_USER }}
+#          token: ${{ secrets.JIRA_TOKEN }}
+#          base-url: ${{ secrets.JIRA_DOMAIN }}
+#          ticket-id: ${{ steps.get-jira.outputs.ticket-id }}
+#
+#      - name: echo jira details
+#        run:
+#          echo "4 running jira details"
+#          echo ${{ steps.jira.outputs.link }} - ${{ steps.jira.outputs.labels[1] }} - ${{ steps.jira.outputs.summary }} -
 
 
 #      - uses: btwrk/action-jira-linter@v1.0.1
