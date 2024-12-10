@@ -18,8 +18,11 @@ jobs:
       - name: Get Jira Issue
         id: get-jira-issue
         run: |
-          ticket_id="SCRUM-1"
-          echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
+          title="${{github.event.pull_request.title}}"
+          
+          # Extract substring inside square brackets
+          if [[ $title =~ \[([A-Z]+-[0-9]+)\] ]]; then
+            echo "ticket-id=$title" >> $GITHUB_OUTPUT
 
       # this action will update the fields of the Jira issue (labels)
       - name: Update Fields
