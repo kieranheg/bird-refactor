@@ -9,7 +9,8 @@ jobs:
         id: get-jira
         run: |
           title="${{github.event.pull_request.title}}"
-          echo "title=$title" >> $GITHUB_OUTPUT
+          echo "1 title=$title"
+          echo "2 title=$title" >> $GITHUB_OUTPUT
           echo "=====================" >> $GITHUB_OUTPUT
           ticket_id="https://kieranheg.atlassian.net/browse/SCRUM-1"
           if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
