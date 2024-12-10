@@ -22,7 +22,6 @@ jobs:
 #          retryDelay: 10
 #          timeout: 2000
 #          failOnError: true
-          # either one of the following three config option formats of 'issue' is valid
           issue: SCRUM-1
 #          issue: XYZ-1,XYZ-2,XYZ-3
 #          issue: |
