@@ -24,6 +24,7 @@ jobs:
       # this action will only be reached when failOnError was set to false in the previous step
       - name: Print Outputs
         run: |
+          echo "REPO_NAME: ${{ github.event.repository.name }}"
           echo "HAS ERRORS: ${{ steps.updatefields.outputs.hasErrors }}"
           echo "IDs SUCCESS: ${{ steps.updatefields.outputs.successful }}"
           echo "IDs ERROR: ${{ steps.updatefields.outputs.failed }}"
