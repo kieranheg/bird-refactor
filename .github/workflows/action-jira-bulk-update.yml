@@ -32,7 +32,7 @@ jobs:
         uses: frieder/jira-issue-updater@v1
         with:
           issue: ${{ steps.get-jira-issue.outputs.ticket-id }}
-          labels: = cs_4_${{ github.event.repository.name }}
+          labels: = cs_pr_${{ github.event.repository.name }}
 
       # this action will only be reached when failOnError was set to false in the previous step
       - name: Print Outputs
