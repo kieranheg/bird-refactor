@@ -10,13 +10,13 @@ jobs:
         run: |
           title="${{github.event.pull_request.title}}"
           echo "1 title=$title"
-          echo "2 title=$title" >> $GITHUB_OUTPUT
-          echo "=====================" >> $GITHUB_OUTPUT
+          echo "2 title=$title" >> $env:$GITHUB_OUTPUT
+          echo "=====================" >> $env:$GITHUB_OUTPUT
           ticket_id="https://kieranheg.atlassian.net/browse/SCRUM-1"
           if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
-            echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
+            echo "ticket-id=$ticket_id" >> $env:$GITHUB_OUTPUT
           fi
-          echo "not in if >> ticket-id=$ticket_id" >> $GITHUB_OUTPUT
+          echo "not in if >> ticket-id=$ticket_id" >> $env:$GITHUB_OUTPUT
 
       - uses: insidewhy/action-get-jira-issue@v1
         id: jira
