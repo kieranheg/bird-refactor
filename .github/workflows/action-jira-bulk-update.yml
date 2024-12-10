@@ -10,12 +10,14 @@ jobs:
         run: |
           title="${{github.event.pull_request.title}}"
           echo "1 title=$title"
-          echo "=====================" 
+          echo "1 =====================" 
           ticket_id="https://kieranheg.atlassian.net/browse/SCRUM-1"
+          echo "2 ticket-id=$ticket_id"
+          echo "2 ====================="
           if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
             echo "ticket-id=$ticket_id"
           fi
-          echo "ticket-id=$ticket_id"
+          echo "3 ====================="
 
       - uses: insidewhy/action-get-jira-issue@v1
         id: jira
@@ -26,7 +28,9 @@ jobs:
           ticket-id: ${{ steps.get-jira.outputs.ticket-id }}
 
       - name: echo jira details
-        run: echo ${{ steps.jira.outputs.link }} - ${{steps.jira.outputs.summary}}
+        run:
+          echo "4 running jira details"
+          echo ${{ steps.jira.outputs.link }} - ${{steps.jira.outputs.summary}}
 
 
 #      - uses: btwrk/action-jira-linter@v1.0.1
