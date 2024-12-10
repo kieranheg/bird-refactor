@@ -15,7 +15,8 @@ jobs:
           echo "2 ticket-id=$ticket_id"
           echo "2 ====================="
           if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
-            echo "ticket-id=$ticket_id"
+            echo "7 ticket-id=$ticket_id"
+            echo "8 ticket-id=$ticket_id" >> $GITHUB_OUTPUT
           fi
           echo "3 ====================="
 
