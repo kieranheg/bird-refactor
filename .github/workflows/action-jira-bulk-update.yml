@@ -18,46 +18,8 @@ jobs:
         id: updatefields
         uses: frieder/jira-issue-updater@v1
         with:
-#          retries: 1
-#          retryDelay: 10
-#          timeout: 2000
-#          failOnError: true
           issue: SCRUM-1
-#          issue: XYZ-1,XYZ-2,XYZ-3
-#          issue: |
-#            XYZ-1
-#            XYZ-2
-#            XYZ-3
-#          summary: Some fancy title
-#          description: Plaintext only
-#          assignee: 123456:12345678-abcd-abcd-abcd-1234567890ab
-#          priority: Lowest
-#          duedate: 2023-02-01
-#          resolution: Won't Do
-#          components: |
-#            = component1
-#            = component2
-#            + component3
-#            - component2
-#          fixversions: |
-#            = 1.0
-#            = 1.1
-#            + 2.0
-#            - 1.1
-          labels: |
-#            = foo
-#            = foo2
-#            = bar2
-            + bar
-#            - foo2
-#            - bar2
-#          customfields: |
-#            10050: some value
-#            10051: 2023-01-01
-#            10052: https://github.com/marketplace?type=action
-#          customfieldsJson: |
-#            10057: {"content":[{"content":[{"type":"text","text":"Content for the TextArea custom field"}],"type":"paragraph"}],"type":"doc","version":1}
-#            10058: ["value1", "value2]
+          labels: + bar
 
       # this action will only be reached when failOnError was set to false in the previous step
       - name: Print Outputs
