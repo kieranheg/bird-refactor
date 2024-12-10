@@ -18,7 +18,8 @@ jobs:
       - name: Get Jira Issue
         id: get-issue
         run:
-          echo "ticket-id=SCRUM-1" >> $GITHUB_OUTPUT
+          ticket_id="SCRUM-1"
+          echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
 
       # this action will update the fields of the Jira issue (labels)
       - name: Update Fields
