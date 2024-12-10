@@ -1,10 +1,10 @@
-name: Jira Issue Updater
+name: Jira Label Updater
 
 on: [pull_request]
 
 jobs:
   update-jira-issue:
-    name: Update Jira issue
+    name: Update Jira Label
     runs-on: ubuntu-latest
     steps:
       - name: Jira Login
@@ -14,12 +14,19 @@ jobs:
           JIRA_USER_EMAIL: ${{ secrets.JIRA_USER }}
           JIRA_API_TOKEN: ${{ secrets.JIRA_TOKEN }}
 
+      # this action will get the Jira issue KEY from the PR title
+      - name: Get Jira Issue
+        id: get-issue
+        run:
+          echo "ticket-id=SCRUM-1" >> $GITHUB_OUTPUT
+
+      # this action will update the fields of the Jira issue (labels)
       - name: Update Fields
-        id: updatefields
+        id: update-fields
         uses: frieder/jira-issue-updater@v1
         with:
-          issue: SCRUM-1
-          labels: = cs_${{ github.event.repository.name }}
+          issue: ${{ steps.get-jira.outputs.ticket-id }}
+          labels: = cs_2_${{ github.event.repository.name }}
 
       # this action will only be reached when failOnError was set to false in the previous step
       - name: Print Outputs
