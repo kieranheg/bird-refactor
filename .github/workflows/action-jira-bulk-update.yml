@@ -31,7 +31,7 @@ jobs:
       - name: echo jira details
         run:
           echo "4 running jira details"
-          echo ${{ steps.jira.outputs.link }} - ${{steps.jira.outputs.summary}} - ${{steps.jira.outputs.labels[0]}}
+          echo ${{ steps.jira.outputs.link }} - ${{ steps.jira.outputs.summary }} - ${{ steps.jira.outputs.labels[0] }}
 
 
 #      - uses: btwrk/action-jira-linter@v1.0.1
