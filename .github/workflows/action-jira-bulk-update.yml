@@ -19,7 +19,7 @@ jobs:
         uses: frieder/jira-issue-updater@v1
         with:
           issue: SCRUM-1
-          labels: = ${{ github.event.repository.name }}
+          labels: = cs_${{ github.event.repository.name }}
 
       # this action will only be reached when failOnError was set to false in the previous step
       - name: Print Outputs
