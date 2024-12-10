@@ -22,10 +22,10 @@ jobs:
           echo "title: $title"
           
           if [[ $title =~ \[([A-Z]+-[0-9]+)\] ]]; then
-            ticket-id="${BASH_REMATCH[1]}"
-            echo "ticket-id=SCRUM-1" >> $GITHUB_OUTPUT
+            ticket_id="${BASH_REMATCH[1]}"
+            echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
           fi
-          echo "ticket-id: $ticket-id"
+          echo "ticket_id: $ticket_id"
 
       # this action will update the fields of the Jira issue (labels)
       - name: Update Fields
