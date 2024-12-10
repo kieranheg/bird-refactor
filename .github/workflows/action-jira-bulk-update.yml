@@ -11,11 +11,11 @@ jobs:
           title="${{github.event.pull_request.title}}"
           echo "1 title=$title"
           echo "=====================" 
-          ticket_id="SCRUM-1"
-          if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
-            echo "ticket-id=$ticket_id" 
-          fi
-          echo "not in if >> ticket-id=$ticket_id"
+          ticket_id="https://kieranheg.atlassian.net/browse/SCRUM-1"
+#          if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
+#            echo "ticket-id=$ticket_id"
+#          fi
+          echo "ticket-id=$ticket_id"
 
       - uses: insidewhy/action-get-jira-issue@v1
         id: jira
