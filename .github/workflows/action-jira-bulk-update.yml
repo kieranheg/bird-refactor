@@ -60,9 +60,10 @@ jobs:
           fields: workflow,job,commit,repo,ref,author,took
           text: "There has been a failure in the pipeline -please investigate"
           icon_emoji: ":ghostbusters:"
-          channel: "Kieran.Hegarty"
-          # exclude this line to send to default channel of webhook my personal channel
-#          channel: "#cs_devs_only" # exclude this line to send to default channel of webhook my personal channel
+          username: "BranchBusters"
+          # exclude channel this line to send to default channel of webhook my personal channel by webhook
+          # it doesnt send to personal channels
+#          channel: "#cs_devs_only"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_KIERAN_URL}}
