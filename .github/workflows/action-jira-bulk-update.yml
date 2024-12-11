@@ -59,7 +59,7 @@ jobs:
           status: failure
           fields: workflow,job,commit,repo,ref,author,took
           text: "There has been a failure in the pipeline -see below --please investigate"
-          icon_emoji: ":ghost:"
+          icon_emoji: ":ghostbusters:"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_KIERAN_URL}}
