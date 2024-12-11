@@ -57,7 +57,8 @@ jobs:
         with:
           # status: ${{ env.WORKFLOW_CONCLUSION }} # neutral, success, skipped, cancelled, timed_out, action_required, failure
           status: failure
-          fields: workflow,job,commit,repo,ref,author,took
+          # field options: workflow,job,commit,repo,ref,author,took,message,eventName
+          fields: workflow,job,commit,repo,author,message,eventName
           text: "There has been a failure in the pipeline -please investigate"
           icon_emoji: ":ghostbusters:"
           username: "Who ya gonna call.. BranchBusters"
