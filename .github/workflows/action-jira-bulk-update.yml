@@ -58,9 +58,11 @@ jobs:
           # status: ${{ env.WORKFLOW_CONCLUSION }} # neutral, success, skipped, cancelled, timed_out, action_required, failure
           status: failure
           fields: workflow,job,commit,repo,ref,author,took
-          text: "There has been a failure in the pipeline -see below --please investigate"
+          text: "There has been a failure in the pipeline -please investigate"
           icon_emoji: ":ghostbusters:"
-          channel: "#cs_devs_only"
+          channel: "@Kieran.Hegarty"
+          # exclude this line to send to default channel of webhook my personal channel
+#          channel: "#cs_devs_only" # exclude this line to send to default channel of webhook my personal channel
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_KIERAN_URL}}
