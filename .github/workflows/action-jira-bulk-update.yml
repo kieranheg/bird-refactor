@@ -60,7 +60,7 @@ jobs:
           fields: workflow,job,commit,repo,ref,author,took
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_KIERAN_URL}}
         if: env.WORKFLOW_CONCLUSION == 'failure' # notify only if failure
 
 
