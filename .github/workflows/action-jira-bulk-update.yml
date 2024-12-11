@@ -60,6 +60,7 @@ jobs:
           fields: workflow,job,commit,repo,ref,author,took
           text: "There has been a failure in the pipeline -see below --please investigate"
           icon_emoji: ":ghostbusters:"
+          channel: "#cs_devs_only"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_KIERAN_URL}}
