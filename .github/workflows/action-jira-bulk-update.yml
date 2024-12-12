@@ -1,16 +1,124 @@
-name: action-jira-linter
-on:
-  push:
-    branches:
-      - main
+name: Jira Label Updater
+
+on: [pull_request]
 
 jobs:
-  action-jira-linter:
+  update-jira-issue:
+    name: Update Jira Issue
     runs-on: ubuntu-latest
     steps:
-      - uses: btwrk/action-jira-linter@v1.0.1
+      - name: Jira Login
+        uses: frieder/gha-jira-login@v1
+        env:
+          JIRA_BASE_URL: ${{ secrets.JIRA_DOMAIN }}
+          JIRA_USER_EMAIL: ${{ secrets.JIRA_USER }}
+          JIRA_API_TOKEN: ${{ secrets.JIRA_TOKEN }}
+
+      # this action will get the Jira issue KEY from the PR title
+      - name: Get Jira Issue
+        id: get-jira-issue
+        run: |
+          title="${{github.event.pull_request.title}}"
+          echo "title: $title"
+          
+          if [[ $title =~ \[([A-Z]+-[0-9]+)\] ]]; then
+            ticket_id="${BASH_REMATCH[1]}"
+            echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
+          fi
+
+      # this action will update the fields of the Jira issue (labels)
+      - name: Update Fields
+        id: update-fields
+        uses: frieder/jira-issue-updater@v1
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-          jira-token: ${{ secrets.JIRA_TOKEN }}
-          jira-base-url: ${{ secrets.JIRA_DOMAIN }}
-          jira-user: ${{ secrets.JIRA_USER }}
+          issue: ${{ steps.get-jira-issue.outputs.ticket-id }}
+          labels: + cs_repo_12Dec-1_${{ github.event.repository.name }}
+
+      # this action will only be reached when failOnError was set to false in the previous step
+      - name: Print Outputs
+        run: |
+          echo "REPO_NAME: ${{ github.event.repository.name }}"
+          echo "HAS ERRORS: ${{ steps.updatefields.outputs.hasErrors }}"
+          echo "IDs SUCCESS: ${{ steps.updatefields.outputs.successful }}"
+          echo "IDs ERROR: ${{ steps.updatefields.outputs.failed }}"
+
+  slack:
+    name: Slack
+    needs: update-jira-issue # set "needs" only last job except this job
+    runs-on: ubuntu-latest
+    if: always() # set "always"
+    steps:
+      # run this action to get the workflow conclusion
+      # You can get the conclusion via env (env.WORKFLOW_CONCLUSION)
+      - uses: technote-space/workflow-conclusion-action@v3
+
+        # run other action with the workflow conclusion
+      - uses: 8398a7/action-slack@v3
+        with:
+          # status: ${{ env.WORKFLOW_CONCLUSION }} # neutral, success, skipped, cancelled, timed_out, action_required, failure
+          status: failure
+          # field options: repo,message,commit,author,action,eventName,ref,workflow,job,took,pullRequest
+          fields: repo,commit,author,eventName,workflow,pullRequest
+          text: "There has been a failure in the pipeline -please investigate"
+          icon_emoji: ":ghostbusters:"
+          username: "Who ya gonna call.. BranchBusters"
+          # exclude channel this line to send to default channel of webhook my personal channel by webhook
+          # it doesnt send to personal channels
+#          channel: "#cs_devs_only"
+#          channel: "#common-sense-build-deploy-notifications"
+#          custom_payload: |
+#            {
+#              attachments: [{
+#                color: '${{ job.status }}' === 'success' ? 'good' : '${{ job.status }}' === 'failure' ? 'danger' : 'warning',
+#                text: `${process.env.AS_WORKFLOW}\n${process.env.AS_JOB} (${process.env.AS_COMMIT}) of ${process.env.AS_REPO}@${process.env.AS_REF} by ${process.env.AS_AUTHOR} ${{ job.status }} in ${process.env.AS_TOOK}`,
+#              }]
+#            }
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_KIERAN_URL }}
+        if: env.WORKFLOW_CONCLUSION == 'failure' # notify only if failure
+
+
+#name: action-jira-linter
+#on: [pull_request]
+#
+#jobs:
+#  action-jira-linter:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: determine associated issue id
+#        id: get-jira
+#        run: |
+#          title="${{github.event.pull_request.title}}"
+#          echo "1 title=$title"
+#          echo "1 ====================="
+#          ticket_id="SCRUM-1"
+#          echo "2 ticket-id=$ticket_id"
+#          echo "2 ====================="
+#          if echo $ticket_id | grep -Eqx '[A-Z]+-[0-9]+'; then
+#            echo "7 ticket-id=$ticket_id"
+#            echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
+#          fi
+#          echo "3 ====================="
+#
+#      - uses: insidewhy/action-get-jira-issue@v1
+#        id: jira
+#        with:
+#          user: ${{ secrets.JIRA_USER }}
+#          token: ${{ secrets.JIRA_TOKEN }}
+#          base-url: ${{ secrets.JIRA_DOMAIN }}
+#          ticket-id: ${{ steps.get-jira.outputs.ticket-id }}
+#
+#      - name: echo jira details
+#        run:
+#          echo "4 running jira details"
+#          echo ${{ steps.jira.outputs.link }} - ${{ steps.jira.outputs.labels[1] }} - ${{ steps.jira.outputs.summary }} -
+
+
+#      - uses: btwrk/action-jira-linter@v1.0.1
+#        with:
+#          github-token: ${{ secrets.GITHUB_TOKEN }}
+#          jira-token: ${{ secrets.JIRA_TOKEN }}
+#          jira-base-url: ${{ secrets.JIRA_DOMAIN }}
+#          jira-user: ${{ secrets.JIRA_USER }}
+#
