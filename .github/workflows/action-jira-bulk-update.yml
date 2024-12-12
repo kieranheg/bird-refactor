@@ -23,7 +23,7 @@ jobs:
           
           if [[ $title =~ \[([A-Z]+-[0-9]+)\] ]]; then
             ticket_id="${BASH_REMATCH[1]}"
-            echo "ticket-id=$ticket_idx" >> $GITHUB_OUTPUT
+            echo "ticket-id=$ticket_id" >> $GITHUB_OUTPUT
           fi
 
       # this action will update the fields of the Jira issue (labels)
@@ -32,7 +32,7 @@ jobs:
         uses: frieder/jira-issue-updater@v1
         with:
           issue: ${{ steps.get-jira-issue.outputs.ticket-id }}
-          labels: + cs_repo_${{ github.event.repository.name }}
+          labels: + cs_repo_12Dec-1_${{ github.event.repository.name }}
 
       # this action will only be reached when failOnError was set to false in the previous step
       - name: Print Outputs
